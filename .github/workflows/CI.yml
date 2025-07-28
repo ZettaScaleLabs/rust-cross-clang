@@ -7,7 +7,7 @@ on:
 jobs:
   prepare:
     name: Prepare
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-runner-set
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
@@ -17,9 +17,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   builds:
-    name: Build jenoch/rust-cross:${{ matrix.image.arch }}
+    name: Build zettascaletech/rust-cross:${{ matrix.image.arch }}
     needs: prepare
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-runner-set
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
@@ -28,13 +28,13 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_COM_USERNAME }}
-          password: ${{ secrets.DOCKER_COM_PASSWORD }}
-      - name: Build jenoch/rust-cross:${{ matrix.image.arch }} from ${{ matrix.dockerfile }}
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build zettascaletech/rust-cross:${{ matrix.image.arch }} from ${{ matrix.dockerfile }}
         uses: docker/build-push-action@v2
         with:
           context: .
           platforms: linux/amd64
           push: true
           file: ${{ matrix.image.file }}
-          tags: jenoch/rust-cross:${{ matrix.image.arch }}
+          tags: zettascaletech/rust-cross:${{ matrix.image.arch }}
