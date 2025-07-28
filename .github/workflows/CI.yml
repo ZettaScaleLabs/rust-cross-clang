@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - id: set-matrix
         run: |
-          python3 -c 'import glob, json; files=glob.glob("Dockerfile.*"); images=list(map(lambda f: {"file":f, "arch":f[11:]}, files)); print("::set-output name=matrix::"+json.dumps({"image": images}))'
+          python3 -c 'import glob, json; files=glob.glob("Dockerfile.*"); images=list(map(lambda f: {"file":f, "arch":f[11:]}, files)); print("matrix="+json.dumps({"image": images}))' >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
