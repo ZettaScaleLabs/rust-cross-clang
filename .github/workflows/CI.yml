@@ -20,7 +20,7 @@ jobs:
   builds:
     name: Build rust-cross:${{ matrix.image.arch }}
     needs: prepare
-    runs-on: ubuntu-runner-set
+    runs-on: aws-ubuntu-x64-large-runner-set
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
